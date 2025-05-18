@@ -1,0 +1,32 @@
+myjspwebapp/
+├── pom.xml
+└── src/
+    └── main/
+        ├── java/             <-- [1] Java 소스 파일 (.java)
+        │   └── (여기에 패키지 구조 생성)
+        │       └── com/
+        │           └── example/
+        │               └── YourServlet.java
+        │               └── SomeUtil.java
+        ├── resources/        <-- [2] 리소스 파일 (properties, XML 설정 등)
+        │   └── application.properties
+        └── webapp/           <-- [3] 웹 콘텐츠 루트 (WAR 파일의 루트가 됨)
+            ├── css/          <-- [4] CSS 파일 (.css)
+            │   └── style.css
+            ├── js/           <-- [5] JavaScript 파일 (.js)
+            │   └── script.js
+            ├── images/       <-- [6] 이미지 파일 등 정적 리소스
+            │   └── logo.png
+            ├── WEB-INF/      <-- [7] 특별한 디렉토리 (직접 접근 불가)
+            │   ├── web.xml   <-- 웹 배포 서술자 (기본 아키타입에 포함)
+            │   ├── jsp/      <-- [8] WEB-INF 내부에 숨기고 싶은 JSP 파일
+            │   │   └── include/
+            │   │       └── header.jsp
+            │   │   └── user/
+            │   │       └── profile.jsp
+            │   └── (classes/)<-- [9] 컴파일된 .class 파일 (Maven이 자동 생성)
+            │   └── (lib/)    <-- [10] 의존성 JAR 파일 (Maven이 자동 관리)
+            │   └── (db/)
+            │       └── mydb.sqlite
+            ├── index.jsp     <-- [11] 기본 JSP (webapp 루트)
+            └── otherPage.jsp <-- [12] webapp 루트에 바로 접근 가능한 다른 JSP 파일
