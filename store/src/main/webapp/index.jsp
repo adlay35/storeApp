@@ -1,5 +1,8 @@
+<!DOCTYPE html>
 <html>
 <body>
-<h2>Hello World!</h2>
+    <jsp:forward page="/layout.jsp">
+        <jsp:param name="contentPage" value="/test.jsp"/>
+    </jsp:forward>
 </body>
 </html>
