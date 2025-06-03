@@ -243,17 +243,10 @@ p, img{
 /* content가 들어갈 영역 */
 .container {
     width: 1400px;
-    height: 700px;
     margin: 0 auto;
 
     /* 임시 */
-    background-color: rgb(176, 176, 176);
+    /* background-color: rgb(176, 176, 176); */
     display: flex;
     justify-content:center;
-}
-
-.container p {
-    font-size: 60px;
-    margin: 0;
-    color: #d4d4d4;
 }
