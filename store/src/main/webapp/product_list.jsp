@@ -28,6 +28,26 @@
             String sql = "SELECT id, img_url, company, name, price FROM product_tb LIMIT 20";
             rs = stmt.executeQuery(sql);
     %>
+            <div class="company-filter-container">
+                <p>제조사</p>
+                <p>|</p>
+                <form action="layout.jsp" method="get">
+                    <input type="hidden" name="contentPage" value="/product_list.jsp">
+                    <input type="hidden" name="company" value="전체">
+                    <button type="submit" class="company-filter-btn">전체</button>
+                </form>
+                <form action="/layout.jsp" method="get">
+                    <input type="hidden" name="contentPage" value="/product_list.jsp">
+                    <input type="hidden" name="company" value="웅진">
+                    <button type="submit" class="company-filter-btn">웅진</button>
+                </form>
+                <form action="/layout.jsp" method="get">
+                    <input type="hidden" name="contentPage" value="/product_list.jsp">
+                    <input type="hidden" name="company" value="롯데">
+                    <button type="submit" class="company-filter-btn">롯데</button>
+                </form>
+            </div>
+
             <div class="col">
     <%
             int count = 0;

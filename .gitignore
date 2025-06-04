@@ -1,2 +1,4 @@
 # 빌드 파일 무시
 store/target/
+
+store/src/main/webapp/WEB_INF/lib/
