@@ -26,6 +26,8 @@ p, img{
     align-items: center;
     position: sticky;
     top: 0px;
+
+    z-index: 999;
 }
 
 .header-container {
@@ -46,6 +48,14 @@ p, img{
     font-size: 48px;
     color:#3F72AF;
     margin-bottom: 5px;
+    background-color:#dbe2ef;
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+.logo:hover {
+    cursor: pointer;
 }
 
 /* 카테고리 */
@@ -84,6 +94,7 @@ p, img{
     padding: 10px;
     border-radius: 10px;
     gap: 5px;
+    box-shadow: 8px 8px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* 위치 수정해야함 -> 화면 비율 다르면 이상해짐 */
@@ -109,14 +120,17 @@ p, img{
     background-color: #B4BBC9;
 }
 
-.category1, .category2, .category3, .category4 {
+.category-btn {
     text-align: center;
     font-size: 25px;
+    border: 0;
+    background-color: #ffffff;
+    width: 100%;
 }
 
-
-.category1:hover, .category2:hover, .category3:hover, .category4:hover {
+.category-btn:hover {
     background-color: #d4d4d4;
+    cursor: pointer;
 }
 
 /* 검색창 */
@@ -180,6 +194,7 @@ p, img{
 
     background-color: #ffffff;
     border-radius: 10px;
+    box-shadow: 8px 8px 10px rgba(0, 0, 0, 0.3);
 }
 
 .triangle2 {
@@ -200,6 +215,11 @@ p, img{
     display: flex;
 }
 
+.welcome-message {
+    font-size: 19px;
+    margin-left: 10px;
+}
+
 .user-dropdown-left {
     width: 124px;
     border-right: 2px solid #d4d4d4;
@@ -217,7 +237,7 @@ p, img{
 
 .signin-btn{
     width: 100%;
-    height: 100%;
+    height: 60px;
     border: none;
     background-color: #ffffff;
     border-top-left-radius: 10px;
@@ -225,9 +245,9 @@ p, img{
     font-size: 22px;
 }
 
-.signup-btn {
+.signup-btn, .logout-btn {
     width: 100%;
-    height: 100%;
+    height: 60px;
     border: none;
     background-color: #ffffff;
     border-top-right-radius: 10px;
@@ -235,7 +255,7 @@ p, img{
     font-size: 22px;
 }
 
-.signin-btn:hover, .signup-btn:hover {
+.signin-btn:hover, .signup-btn:hover, .logout-btn:hover {
     background-color: #d4d4d4;
     cursor: pointer;
 }
