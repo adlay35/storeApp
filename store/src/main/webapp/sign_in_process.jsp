@@ -38,7 +38,7 @@
             response.sendRedirect("layout.jsp?contentPage=sign_in.jsp");
         }
 
-    } ccatch (Exception e) {
+    } catch (Exception e) {
             out.println("에러 발생: " + e.getMessage());
     } finally {
         if (rs != null) try { rs.close(); } catch (SQLException e) { System.err.println("ResultSet close error: " + e.getMessage()); }
