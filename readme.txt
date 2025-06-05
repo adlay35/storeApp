@@ -15,11 +15,13 @@ Mysql 8.0.26
 
 ---db 동기화
 로컬 mysql에 store_db라는 이름의 db를 먼저 만들어야함 -> CREATE DATABESE store_db;
+
+아래 명령어는 cmd 혹은 파워쉘에서 실행
 덤프 파일 내보내기
-mysqldump -u root -p store_db > C:\Users\user\Desktop\storeApp\store_db.sql  파일 경로 적으면 됨
+mysqldump -u root -p store_db > C:\Users\user\Desktop\storeApp\store_db.sql  파일 경로 적으면 됨(store_db.sql의 경로)
 데이터 덮어쓰기
 cmd /c "mysql -u root -p store_db < C:\Users\Ye Chan\Desktop\storeApp\store_db.sql" 
 
-store\src\main\webapp\WEB-INF\lib
-이 안에 mysql-connector-java-8.0.26.jar 집어넣어야함
--> Program(x86)\mysql\connector-server? 대충 이런거 안에 있음
+---db 사용하기 전에 mysql-connector 연결하기.
+C:\Program Files (x86)\MySQL\Connector J 8.0 여기 경로에 있는 mysql-connector-java-8.0.26.jar 복사해서
+store\src\main\webapp\WEB-INF\lib 이 경로에 붙여 넣기
