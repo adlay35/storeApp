@@ -5,20 +5,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/product_list_style.css">
+    <link rel="stylesheet" href="css/sign_style.css">
 </head>
 <body>
     <div class="signup-container">
-        <h2>로그인</h2>
-        <form action="sign_in_process.jsp" method="post">
-            <div class="signup-form-group">
-                <label for="uid">아이디</label>
-                <input type="text" id="uid" name="uid" required>
-            </div>
-            <div class="signup-form-group">
-                <label for="password">비밀번호</label>
-                <input type="password" id="password" name="password" required>
-            </div>
+        <p class="signup-p1">로그인</p>
+        <form class="signup-form-group" action="sign_in_process.jsp" method="post">
+            <input type="text" class="input-box" id="uid" name="uid" required placeholder="아이디">
+            <input type="password" class="input-box" id="password" name="password" required placeholder="비밀번호">
             <button type="submit" class="signup-submit-btn">로그인</button>
         </form>
         <p style="margin-top: 20px;">

@@ -169,28 +169,34 @@
     <link rel="stylesheet" href="css/cart_style.css">
 </head>
 <body>
-    <div class="cart-container">
-        <h2>장바구니</h2>
-        <% if (cartProductList.isEmpty()) { %>
-            <p>장바구니가 비어 있습니다.</p>
-        <% } else { %>
-            <% long totalAmount = 0; %>
-            <% for (Product p : cartProductList) { %>
-                <div class="cart-item">
-                    <img src="<%= p.getImgUrl() %>" alt="<%= p.getName() %>">
-                    <div class="cart-item-details">
-                        <p><strong><%= p.getCompany() %></strong> <%= p.getName() %></p>
-                        <p>가격: <%= String.format("%,d", p.getPrice()) %> 원</p>
-                        <p class="cart-item-quantity">수량: <%= p.getQuantity() %></p>
-                        <p>총합: <%= String.format("%,d", (long)p.getPrice() * p.getQuantity()) %> 원</p>
+    <div class="cart-head">
+        <p>장바구니</p>
+    </div>
+    <div class="cart-row">
+        <div class="cart-container">
+            <% if (cartProductList.isEmpty()) { %>
+                <p>장바구니가 비어 있습니다.</p>
+            <% } else { %>
+                <% long totalAmount = 0; %>
+                <% for (Product p : cartProductList) { %>
+                    <div class="cart-item">
+                        <img src="<%= p.getImgUrl() %>" alt="<%= p.getName() %>">
+                        <div class="cart-item-details">
+                            <p><strong><%= p.getCompany() %></strong> <%= p.getName() %></p>
+                            <p>가격: <%= String.format("%,d", p.getPrice()) %> 원</p>
+                            <p class="cart-item-quantity">수량: <%= p.getQuantity() %></p>
+                            <p>총합: <%= String.format("%,d", (long)p.getPrice() * p.getQuantity()) %> 원</p>
+                        </div>
                     </div>
+                    <% totalAmount += (long)p.getPrice() * p.getQuantity(); %>
+                <% } %>
+                <div class="cart-total">
+                    총 결제 금액: <%= String.format("%,d", totalAmount) %> 원
                 </div>
-                <% totalAmount += (long)p.getPrice() * p.getQuantity(); %>
             <% } %>
-            <div class="cart-total">
-                총 결제 금액: <%= String.format("%,d", totalAmount) %> 원
-            </div>
-        <% } %>
+        </div>
+        <div class="cart-calculator">
+        </div>
     </div>
 </body>
 </html>
