@@ -22,8 +22,8 @@
                 <div class="category-dropdown">
                     <form class="category1" action="<%= request.getContextPath() %>/layout.jsp" method="get">
                         <input type="hidden" name="contentPage" value="/category_result.jsp">
-                        <input type="hidden" name="category" value="음료">
-                        <button type="submit" class="category-btn">음료</button>
+                        <input type="hidden" name="category" value="카테고리1">
+                        <button type="submit" class="category-btn">카테고리1</button>
                     </form>
                     <form class="category2" action="<%= request.getContextPath() %>/layout.jsp" method="get">
                         <input type="hidden" name="contentPage" value="/category_result.jsp">
@@ -83,12 +83,12 @@
                 </div>
             </div>
 
-            <form class="favorite" action="<%= request.getContextPath() %>/layout.jsp" method="get">
+            <%-- <form class="favorite" action="<%= request.getContextPath() %>/layout.jsp" method="get">
                 <input type="hidden" name="contentPage" value="/favorite.jsp">
                 <button type="submit" class="favorite-btn">
                     <img src="img\icons\heart.png" class="favorite-icon"/>
                 </button>
-            </form>
+            </form> --%>
 
             <form class="cart" action="<%= request.getContextPath() %>/layout.jsp" method="get">
                 <input type="hidden" name="contentPage" value="/cart.jsp">

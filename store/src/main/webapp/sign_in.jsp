@@ -12,7 +12,9 @@
         <p class="signup-p1">로그인</p>
         <form class="signup-form-group" action="sign_in_process.jsp" method="post">
             <input type="text" class="input-box" id="uid" name="uid" required placeholder="아이디">
+
             <input type="password" class="input-box" id="password" name="password" required placeholder="비밀번호">
+            
             <button type="submit" class="signup-submit-btn">로그인</button>
         </form>
         <p style="margin-top: 20px;">

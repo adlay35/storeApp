@@ -29,7 +29,7 @@
 %>
 <%
     request.setCharacterEncoding("UTF-8");
-    DecimalFormat formatter = new DecimalFormat("###,###"); // 가격 포맷용
+    DecimalFormat formatter = new DecimalFormat("###,###");
 
     String loggedInUserUid = (String) session.getAttribute("loggedInUser");
     if (loggedInUserUid == null) {
@@ -66,7 +66,6 @@
         rs.close();
         pstmt.close();
 
-        // 찜 목록과 상품 정보가져오기
         String getFavoritesSql = "SELECT p.id, p.name, p.company, p.price, p.img_url " +
                                  "FROM favorite_tb f JOIN product_tb p ON f.product_id = p.id " +
                                  "WHERE f.user_id = ?";
@@ -99,8 +98,8 @@
     <link rel="stylesheet" href="css/favorite_style.css">
 </head>
 <body>
+    <div class="favorite-head">나의 찜 목록</div>
     <div class="favorite-container">
-        <h2>나의 찜 목록</h2>
         <% if (favoriteProducts.isEmpty()) { %>
             <p>찜한 상품이 없습니다.</p>
         <% } else { %>

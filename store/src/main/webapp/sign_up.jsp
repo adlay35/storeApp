@@ -5,28 +5,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/product_list_style.css">
+    <link rel="stylesheet" href="css/sign_style.css">
 </head>
 <body>
     <div class="signup-container">
-        <h2>회원가입</h2>
+        <p class="signup-p1">회원가입</p>
         <form action="sign_up_process.jsp" method="post" onsubmit="return validateForm()">
             <div class="signup-form-group">
-                <label for="uid">아이디</label>
-                <input type="text" id="uid" name="uid" required>
-                <span id="uidError" class="signup-error-message"></span>
+                <input type="text" class="input-box" id="uid" name="uid" required placeholder="아이디">
+                <span id="uidError" class="signup-error-message" style="display: none;"></span>
+
+                <input type="password" class="input-box" id="password" name="password" required placeholder="비밀번호">
+                <span id="passwordError" class="signup-error-message" style="display: none;"></span>
+
+                <input type="password" class="input-box" id="confirmPassword" name="confirmPassword" required placeholder="비밀번호 확인">
+                <span id="confirmPasswordError" class="signup-error-message" style="display: none;"></span>
+
+                <button type="submit" class="signup-submit-btn">가입하기</button>
             </div>
-            <div class="signup-form-group">
-                <label for="password">비밀번호</label>
-                <input type="password" id="password" name="password" required>
-                <span id="passwordError" class="signup-error-message"></span>
-            </div>
-            <div class="signup-form-group">
-                <label for="confirmPassword">비밀번호 확인</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required>
-                <span id="confirmPasswordError" class="signup-error-message"></span>
-            </div>
-            <button type="submit" class="signup-submit-btn">가입하기</button>
         </form>
     </div>
     <script>
@@ -44,10 +40,10 @@
             passwordError.style.display = 'none';
             confirmPasswordError.style.display = 'none';
 
-            // 5~20자의 영문 소문자, 숫자, 언더스코어(_)만 허용, 첫 글자는 영문 소문자
-            const uidRegex = /^[a-z][a-z0-9_]{4,19}$/;
+            // 5~20자의 영문 소문자, 숫자
+            const uidRegex = /^[a-z0-9]{5,20}$/;
             if (!uidRegex.test(uid)) {
-                uidError.textContent = '아이디는 5~20자의 영문 소문자, 숫자, _ 만 가능하며, 첫 글자는 영문 소문자여야 합니다.';
+                uidError.textContent = '아이디는 5~20자의 영문 소문자, 숫자만 가능합니다.';
                 uidError.style.display = 'block';
                 isValid = false;
             }

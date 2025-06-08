@@ -84,15 +84,21 @@
                 </form>
                 <form action="<%= request.getContextPath() %>/layout.jsp" method="get">
                     <input type="hidden" name="contentPage" value="/category_result.jsp">
-                    <input type="hidden" name="company" value="웅진">
+                    <input type="hidden" name="company" value="A사">
                     <input type="hidden" name="category" value="<%= selectedCategory %>">
-                    <button type="submit" class="company-filter-btn">웅진</button>
+                    <button type="submit" class="company-filter-btn">A사</button>
                 </form>
                 <form action="<%= request.getContextPath() %>/layout.jsp" method="get">
                     <input type="hidden" name="contentPage" value="/category_result.jsp">
-                    <input type="hidden" name="company" value="롯데">
+                    <input type="hidden" name="company" value="B사">
                     <input type="hidden" name="category" value="<%= selectedCategory %>">
-                    <button type="submit" class="company-filter-btn">롯데</button>
+                    <button type="submit" class="company-filter-btn">B사</button>
+                </form>
+                <form action="<%= request.getContextPath() %>/layout.jsp" method="get">
+                    <input type="hidden" name="contentPage" value="/category_result.jsp">
+                    <input type="hidden" name="company" value="C사">
+                    <input type="hidden" name="category" value="<%= selectedCategory %>">
+                    <button type="submit" class="company-filter-btn">C사</button>
                 </form>
             </div>
 
@@ -120,12 +126,6 @@
                                         <button type="submit" class="product-cart-btn">
                                             <p>+</p>
                                             <img src="img\icons\cart.png" class="product-cart-icon" alt="장바구니"/>
-                                        </button>
-                                    </form>
-                                    <form action="<%= request.getContextPath() %>/favorite_add_process.jsp" method="post" class="product-favorite">
-                                        <input type="hidden" name="product_id" value="<%= rs.getInt("id") %>">
-                                        <button type="submit" class="product-favorite-btn">
-                                            <img src="img\icons\heart.png" class="product-favorite-icon"/>
                                         </button>
                                     </form>
                                 </div>
@@ -162,16 +162,11 @@
 
     <%
         String cartMessage = (String) session.getAttribute("cartMessage");
-        String favoriteMessage = (String) session.getAttribute("favoriteMessage");
         String loginMessage = (String) session.getAttribute("loginMessage");
 
         if (cartMessage != null) {
             out.println("<script>alert('" + cartMessage + "');</script>");
             session.removeAttribute("cartMessage");
-        }
-        if (favoriteMessage != null) {
-            out.println("<script>alert('" + favoriteMessage + "');</script>");
-            session.removeAttribute("favoriteMessage");
         }
         if (loginMessage != null) {
             out.println("<script>alert('" + loginMessage + "');</script>");

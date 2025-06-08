@@ -31,3 +31,8 @@
     border: none;
     font-size: 17px;
 }
+
+span {
+    font-size: 14px;
+    color: rgb(235, 94, 94);
+}

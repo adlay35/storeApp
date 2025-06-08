@@ -1,27 +1,41 @@
 .favorite-container {
-    width: 80%;
+    width: 1220px;
     margin: 50px auto;
     border: 1px solid #ddd;
-    padding: 20px;
 }
+
+.favorite-head {
+    width: 1220px;
+    height: 80px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid black;
+    margin-bottom: 30px;
+}
+
 .favorite-item {
     display: flex;
     align-items: center;
     border-bottom: 1px solid #eee;
     padding: 15px 0;
 }
+
 .favorite-item:last-child {
     border-bottom: none;
 }
+
 .favorite-item img {
     width: 100px;
     height: 100px;
     object-fit: cover;
     margin-right: 20px;
 }
+
 .favorite-item-details {
     flex-grow: 1;
 }
+
 .favorite-item-details p {
     margin: 5px 0;
 }

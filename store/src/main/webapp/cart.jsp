@@ -1,10 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
-<%@ page import="java.net.URLDecoder" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.LinkedHashMap" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.text.DecimalFormat" %>
 
 <%!
     public class Product {
@@ -31,31 +27,42 @@
         public String getImgUrl() { return imgUrl; }
         public int getQuantity() { return quantity; }
     }
+
+    int[] cartProductIds = new int[100];
+    int[] cartQuantities = new int[100];
+    int cartItemCount = 0; 
+    Product[] cartProductArray = new Product[100];
+    int actualProductCount = 0;
 %>
 
 <%
     request.setCharacterEncoding("UTF-8");
+    DecimalFormat formatter = new DecimalFormat("###,###");
 
     String loggedInUserUid = (String) session.getAttribute("loggedInUser");
     boolean isLoggedIn = (loggedInUserUid != null);
 
-    Map<Integer, Integer> cartItems = new LinkedHashMap<>();
+    cartItemCount = 0; 
+    actualProductCount = 0; 
 
-    if (isLoggedIn) {
+    long totalProductPrice = 0;
+    int deliveryFee = 2500;
+
+    String driverName = "com.mysql.cj.jdbc.Driver";
+    String url = "jdbc:mysql://localhost:3306/store_db";
+    String dbUser = "root";
+    String dbPassword = "123456";
+
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    try {
+        Class.forName(driverName);
+        conn = DriverManager.getConnection(url, dbUser, dbPassword);
+
         //로그인된 사용자 장바구니
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        String driverName = "com.mysql.cj.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/store_db";
-        String dbUser = "root";
-        String dbPassword = "123456";
-
-        try {
-            Class.forName(driverName);
-            conn = DriverManager.getConnection(url, dbUser, dbPassword);
-
+        if (isLoggedIn) {
             int userId = -1;
             String getUserSql = "SELECT id FROM user_tb WHERE uid = ?";
             pstmt = conn.prepareStatement(getUserSql);
@@ -64,7 +71,8 @@
             if (rs.next()) {
                 userId = rs.getInt("id");
             } else {
-                out.println("<p>사용자 정보를 찾을 수 없습니다.</p>");
+                session.setAttribute("cartMessage", "사용자 정보를 찾을 수 없습니다.");
+                response.sendRedirect("layout.jsp?contentPage=index.jsp");
                 return;
             }
             rs.close();
@@ -74,92 +82,92 @@
             pstmt = conn.prepareStatement(getCartSql);
             pstmt.setInt(1, userId);
             rs = pstmt.executeQuery();
-            while (rs.next()) {
-                cartItems.put(rs.getInt("product_id"), rs.getInt("count"));
+            while (rs.next() && cartItemCount < 100) {
+                cartProductIds[cartItemCount] = rs.getInt("product_id");
+                cartQuantities[cartItemCount] = rs.getInt("count");
+                cartItemCount++;
             }
+            rs.close();
+            pstmt.close();
 
-        } catch (ClassNotFoundException e) {
-            out.println("<p>데이터베이스 드라이버 로드 오류: " + e.getMessage() + "</p>");
-        } catch (SQLException e) {
-            out.println("<p>데이터베이스 연결 오류: " + e.getMessage() + "</p>");
-        } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) {}
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) {}
-            if (conn != null) try { conn.close(); } catch (SQLException e) {}
-        }
-
-    } else {
-        // 게스트 장바구니, 쿠키
-        String guestCartCookieName = "guest_cart";
-        String guestCartValue = "";
-        Cookie[] cookies = request.getCookies();
-        
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(guestCartCookieName)) {
-                    guestCartValue = URLDecoder.decode(cookie.getValue(), "UTF-8");
-                    break;
+        } else {
+            //게스트 장바구니, 쿠키
+            String guestCartCookieName = "guest_cart";
+            String guestCartValue = "";
+            Cookie[] cookies = request.getCookies();
+            
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals(guestCartCookieName)) {
+                        guestCartValue = cookie.getValue(); 
+                        break;
+                    }
                 }
             }
-        }
 
-        if (!guestCartValue.isEmpty()) {
-            String[] items = guestCartValue.split("\\|");
-            for (String item : items) {
-                String[] parts = item.split(":");
-                if (parts.length == 2) {
-                    try {
-                        cartItems.put(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
-                    } catch (NumberFormatException e) {
-                        // 유효하지 않은 쿠키 항목은 무시
+            if (!guestCartValue.isEmpty()) {
+                String[] items = guestCartValue.split("\\|"); 
+                for (String item : items) {
+                    String[] parts = item.split(":"); 
+                    if (parts.length == 2 && cartItemCount < 100) { 
+                        try {
+                            cartProductIds[cartItemCount] = Integer.parseInt(parts[0]);
+                            cartQuantities[cartItemCount] = Integer.parseInt(parts[1]);
+                            cartItemCount++;
+                        } catch (NumberFormatException e) {
+                            // 유효하지 않은 쿠키 항목은 무시
+                        }
                     }
                 }
             }
         }
-    }
 
-    // 장바구니에 담긴 상품 정보를 DB에서 조회하여 리스트로 만들기
-    List<Product> cartProductList = new ArrayList<>();
-    if (!cartItems.isEmpty()) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/store_db", "root", "123456");
-
+        //상품 정보 조회
+        if (cartItemCount > 0) {
             StringBuilder productIdsInClause = new StringBuilder();
-            for (int productId : cartItems.keySet()) {
-                if (productIdsInClause.length() > 0) {
+            for (int i = 0; i < cartItemCount; i++) {
+                if (i > 0) {
                     productIdsInClause.append(",");
                 }
-                productIdsInClause.append(productId);
+                productIdsInClause.append(cartProductIds[i]);
             }
 
             String getProductsSql = "SELECT id, name, company, price, img_url FROM product_tb WHERE id IN (" + productIdsInClause.toString() + ")";
             pstmt = conn.prepareStatement(getProductsSql);
             rs = pstmt.executeQuery();
 
-            while (rs.next()) {
+            while (rs.next() && actualProductCount < 100) {
                 int pId = rs.getInt("id");
-                int pQuantity = cartItems.get(pId);
-                cartProductList.add(new Product(
-                    pId,
-                    rs.getString("name"),
-                    rs.getString("company"),
-                    rs.getInt("price"),
-                    rs.getString("img_url"),
-                    pQuantity
-                ));
-            }
+                int pQuantity = 0;
 
-        } catch (Exception e) {
-            out.println("에러 발생: " + e.getMessage());
-        } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException e) { System.err.println("ResultSet close error: " + e.getMessage()); }
-            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { System.err.println("PreparedStatement close error: " + e.getMessage()); }
-            if (conn != null) try { conn.close(); } catch (SQLException e) { System.err.println("Connection close error: " + e.getMessage()); }
+                for(int i = 0; i < cartItemCount; i++) {
+                    if (cartProductIds[i] == pId) {
+                        pQuantity = cartQuantities[i];
+                        break;
+                    }
+                }
+
+                if (pQuantity > 0) { 
+                    cartProductArray[actualProductCount] = new Product(
+                        pId,
+                        rs.getString("name"),
+                        rs.getString("company"),
+                        rs.getInt("price"),
+                        rs.getString("img_url"),
+                        pQuantity
+                    );
+                    totalProductPrice += (long)rs.getInt("price") * pQuantity; 
+                    actualProductCount++;
+                }
+            }
         }
+
+    }  catch (Exception e) {
+            out.println("에러 발생: " + e.getMessage());
+    }   finally {
+        if (rs != null) try { rs.close(); } catch (SQLException e) { System.err.println("ResultSet close error: " + e.getMessage()); }
+        if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { System.err.println("PreparedStatement close error: " + e.getMessage()); }
+        if (conn != null) try { conn.close(); } catch (SQLException e) { System.err.println("Connection close error: " + e.getMessage()); }
     }
 %>
 <!DOCTYPE html>
@@ -172,31 +180,68 @@
     <div class="cart-head">
         <p>장바구니</p>
     </div>
-    <div class="cart-row">
+    <div class="cart-main-content">
         <div class="cart-container">
-            <% if (cartProductList.isEmpty()) { %>
-                <p>장바구니가 비어 있습니다.</p>
+            <% 
+            if (actualProductCount == 0) { 
+            %>
+                <p class="empty-cart-message">장바구니가 비어 있습니다.</p>
             <% } else { %>
-                <% long totalAmount = 0; %>
-                <% for (Product p : cartProductList) { %>
+                <% 
+                    for (int i = 0; i < actualProductCount; i++) { 
+                        Product p = cartProductArray[i];
+                %>
                     <div class="cart-item">
                         <img src="<%= p.getImgUrl() %>" alt="<%= p.getName() %>">
-                        <div class="cart-item-details">
-                            <p><strong><%= p.getCompany() %></strong> <%= p.getName() %></p>
-                            <p>가격: <%= String.format("%,d", p.getPrice()) %> 원</p>
-                            <p class="cart-item-quantity">수량: <%= p.getQuantity() %></p>
-                            <p>총합: <%= String.format("%,d", (long)p.getPrice() * p.getQuantity()) %> 원</p>
+                        <div class="cart-item-info">
+                            <p class="cart-item-company"><%= p.getCompany() %></p>
+                            <p class="cart-item-name"><%= p.getName() %></p>
+                        </div>
+                        <div class="cart-item-price-quantity">
+                            <p class="cart-item-subtotal"><strong><%= formatter.format((long)p.getPrice() * p.getQuantity()) %></strong> 원</p>
+                            <div class="cart-item-quantity-controls">
+                                <form action="<%= request.getContextPath() %>/cart_quantity_process.jsp" method="post">
+                                    <input type="hidden" name="product_id" value="<%= p.getId() %>">
+                                    <input type="hidden" name="action" value="decrease">
+                                    <button type="submit" class="quantity-btn">-</button>
+                                </form>
+                                
+                                <span class="quantity-display"><%= p.getQuantity() %></span>
+                                <form action="<%= request.getContextPath() %>/cart_quantity_process.jsp" method="post">
+                                    <input type="hidden" name="product_id" value="<%= p.getId() %>">
+                                    <input type="hidden" name="action" value="increase">
+                                    <button type="submit" class="quantity-btn">+</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                    <% totalAmount += (long)p.getPrice() * p.getQuantity(); %>
                 <% } %>
-                <div class="cart-total">
-                    총 결제 금액: <%= String.format("%,d", totalAmount) %> 원
-                </div>
             <% } %>
         </div>
+
         <div class="cart-calculator">
+            <h3>주문 예상 금액</h3>
+            <div class="calc-row">
+                <span>총 상품 가격</span>
+                <span><%= formatter.format(totalProductPrice) %> 원</span>
+            </div>
+            <div class="calc-row">
+                <span>배송비</span>
+                <span><%= formatter.format(deliveryFee) %> 원</span>
+            </div>
+            <div class="calc-total">
+                <span>총 주문 금액</span>
+                <span><%= formatter.format(totalProductPrice + deliveryFee) %> 원</span>
+            </div>
+            <button type="button" class="order-button">주문하기</button>
         </div>
+        
+        <% if (session.getAttribute("cartMessage") != null) { %>
+            <script>
+                alert('<%= session.getAttribute("cartMessage") %>');
+                <% session.removeAttribute("cartMessage"); %>
+            </script>
+        <% } %>
     </div>
 </body>
 </html>

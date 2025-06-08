@@ -4,7 +4,7 @@
     display: flex;
     align-items: center;
     border-bottom: 2px solid black;
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
 }
 
 .product-head p {
@@ -13,10 +13,12 @@
 }
 
 .row {
-    width: 100%;
+    width: 1220px;
     display: flex;
     flex-direction: row;
     gap: 30px;
+
+    align-items: flex-start;
 }
 
 .col {
@@ -149,7 +151,7 @@
     border-bottom: 2px solid black;
 }
 
-.product-favorite {
+/* .product-favorite {
     position: absolute;
     opacity: 0;
     visibility: hidden;
@@ -171,7 +173,7 @@
 
 .product-favorite-btn:hover {
     cursor: pointer;
-}
+} */
 
 /* 검색 결과 */
 .search-result-info p {

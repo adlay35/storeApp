@@ -43,6 +43,31 @@
                 <p>최근 등록된 상품</p>
             </div>
 
+            <div class="company-filter-container">
+                <p>제조사</p>
+                <p>|</p>
+                <form action="<%= request.getContextPath() %>/layout.jsp" method="get">
+                    <input type="hidden" name="contentPage" value="/product_list.jsp">
+                    <input type="hidden" name="company" value="all">
+                    <button type="submit" class="company-filter-btn">전체</button>
+                </form>
+                <form action="<%= request.getContextPath() %>/layout.jsp" method="get">
+                    <input type="hidden" name="contentPage" value="/product_list.jsp">
+                    <input type="hidden" name="company" value="A사">
+                    <button type="submit" class="company-filter-btn">A사</button>
+                </form>
+                <form action="<%= request.getContextPath() %>/layout.jsp" method="get">
+                    <input type="hidden" name="contentPage" value="/product_list.jsp">
+                    <input type="hidden" name="company" value="B사">
+                    <button type="submit" class="company-filter-btn">B사</button>
+                </form>
+                <form action="<%= request.getContextPath() %>/layout.jsp" method="get">
+                    <input type="hidden" name="contentPage" value="/product_list.jsp">
+                    <input type="hidden" name="company" value="C사">
+                    <button type="submit" class="company-filter-btn">C사</button>
+                </form>
+            </div>
+
             <div class="col">
     <%
             int count = 0;
@@ -71,12 +96,6 @@
                                     </button>
                                 </form>
                             </div>
-                            <form action="<%= request.getContextPath() %>/favorite_add_process.jsp" method="post" class="product-favorite">
-                                    <input type="hidden" name="product_id" value="<%= rs.getInt("id") %>">
-                                    <button type="submit" class="product-favorite-btn">
-                                        <img src="img\icons\heart.png" class="product-favorite-icon"/>
-                                    </button>
-                            </form>
                         </div>
     <%
                 count++;
@@ -88,7 +107,7 @@
             }
             if (count % 4 != 0) {
     %>
-                </div>
+            </div>
     <%
             }
         } catch (Exception e) {
@@ -102,16 +121,11 @@
     </div>
     <%
         String cartMessage = (String) session.getAttribute("cartMessage");
-        String favoriteMessage = (String) session.getAttribute("favoriteMessage");
         String loginMessage = (String) session.getAttribute("loginMessage");
 
         if (cartMessage != null) {
             out.println("<script>alert('" + cartMessage + "');</script>");
             session.removeAttribute("cartMessage");
-        }
-        if (favoriteMessage != null) {
-            out.println("<script>alert('" + favoriteMessage + "');</script>");
-            session.removeAttribute("favoriteMessage");
         }
         if (loginMessage != null) {
             out.println("<script>alert('" + loginMessage + "');</script>");

@@ -17,7 +17,7 @@
         productId = Integer.parseInt(productIdStr);
     } catch (NumberFormatException e) {
         session.setAttribute("favoriteMessage", "유효하지 않은 상품 정보입니다.");
-        response.sendRedirect("layout.jsp?contentPage=product_list.jsp"); // 상품 목록 페이지로 다시 이동
+        response.sendRedirect("layout.jsp?contentPage=product_list.jsp");
         return;
     }
 
@@ -49,7 +49,7 @@
         rs.close();
         pstmt.close();
 
-        // favorite_tb에 해당 상품이 이미 찜되어 있는지 확인
+        //이미 찜되어 있는지 확인
         String checkFavoriteSql = "SELECT COUNT(*) FROM favorite_tb WHERE user_id = ? AND product_id = ?";
         pstmt = conn.prepareStatement(checkFavoriteSql);
         pstmt.setInt(1, userId);
@@ -57,7 +57,7 @@
         rs = pstmt.executeQuery();
 
         if (rs.next() && rs.getInt(1) > 0) {
-            // 이미 찜되어 있는 경우 찜 해제
+            // 이미 찜되어 있는 경우 해제
             String deleteFavoriteSql = "DELETE FROM favorite_tb WHERE user_id = ? AND product_id = ?";
             pstmt.close();
             pstmt = conn.prepareStatement(deleteFavoriteSql);
